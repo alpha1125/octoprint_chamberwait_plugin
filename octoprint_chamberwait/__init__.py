@@ -8,7 +8,8 @@ import logging
 class ChamberWaitPlugin(
     octoprint.plugin.StartupPlugin,
     octoprint.plugin.TemplatePlugin,
-    octoprint.plugin.SettingsPlugin
+    octoprint.plugin.SettingsPlugin,
+    octoprint.plugin.EventHandlerPlugin  # Added EventHandlerPlugin
 ):
 
     def __init__(self):
@@ -28,6 +29,9 @@ class ChamberWaitPlugin(
     def on_after_startup(self):
         self._logger.info("ChamberWait Plugin started. Monitoring for @CHAMBERWAIT commands.")
 
+    def on_event(self, event, payload):
+        if event == "PrintCancelled":
+            self.on_print_cancelled()
 
     def read_chamber_temp(self):
         try:
