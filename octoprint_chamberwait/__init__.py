@@ -55,12 +55,14 @@ class ChamberWaitPlugin(
                 if current_temp >= target_temp:
                     self._logger.info("Target chamber temperature reached. Resuming print.")
                     self._printer.commands("M117 Starting to print...")
+                    self._stop_event.set()
                     self._printer.resume_print()
                     break
             else:
                 self._logger.error("Chamber temperature read failed. Cancelling print.")
+                self._stop_event.set()
                 self._printer.cancel_print()
-                break;
+                break
 
             time.sleep(5)
 

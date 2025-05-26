@@ -6,7 +6,7 @@ M109 S50
 
 
 
-@CHAMBERWAIT 28  ; Custom command to wait for chamber to reach  desired temp in °C
+@CHAMBERWAIT 29  ; Custom command to wait for chamber to reach  desired temp in °C
 
 
 ; End G-code for Prusa MK3S / Marlin
