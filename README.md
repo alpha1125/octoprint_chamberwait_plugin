@@ -9,7 +9,7 @@ This plugin pauses the print when it encounters the `@CHAMBERWAIT <temp>` comman
    ```bash
    git clone https://github.com/alpha1125/octoprint_chamberwait_plugin
    ```
-   
+ 
 2.	Restart OctoPrint.
 
 
@@ -35,8 +35,7 @@ Your DS18B20 sensor will have a different device path, update the sensor_path in
 
 - **Logging**: Detailed logs are provided for monitoring and debugging purposes.
 
-- **Extensibility**: You can enhance the plugin by adding a settings interface to configure the sensor path or by supporting multiple sensors.
+- Ensure that your DS18B20 sensor is properly connected and that the necessary kernel modules (`w1_gpio` and `w1_therm`) are loaded on your Raspberry Pi.
 
-Ensure that your DS18B20 sensor is properly connected and that the necessary kernel modules (`w1_gpio` and `w1_therm`) are loaded on your Raspberry Pi.
-
-Let me know if you need assistance with packaging this plugin or adding a settings interface! 
+## License
+AGPL-3.0
