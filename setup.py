@@ -3,11 +3,11 @@ from setuptools import setup
 plugin_identifier = "chamberwait"
 plugin_package = "octoprint_chamberwait"
 plugin_name = "OctoPrint-ChamberWait"
-plugin_version = "1.0.0"
+plugin_version = "0.0.1"
 plugin_description = "Pauses print until chamber reaches target temperature."
-plugin_author = "Your Name"
+plugin_author = "Lloyd Leung"
 plugin_author_email = "you@example.com"
-plugin_url = "https://github.com/yourusername/OctoPrint-ChamberWait"
+plugin_url = "https://github.com/alpha1125/octoprint_chamberwait_plugin"
 plugin_license = "AGPLv3"
 plugin_requires = []
 
