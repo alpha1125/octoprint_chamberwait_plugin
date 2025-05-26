@@ -9,7 +9,7 @@ class ChamberWaitPlugin(
     octoprint.plugin.StartupPlugin,
     octoprint.plugin.TemplatePlugin,
     octoprint.plugin.SettingsPlugin,
-    octoprint.plugin.EventHandlerPlugin  # Added EventHandlerPlugin
+    octoprint.plugin.EventHandlerPlugin
 ):
 
     def __init__(self):
@@ -18,7 +18,7 @@ class ChamberWaitPlugin(
         self._pause_event = threading.Event()
         self._resume_event = threading.Event()
         self._target_temp = None
-        self._sensor_path = "/sys/bus/w1/devices/28-5c190087bd28/w1_slave"
+        self._sensor_path = "/sys/bus/w1/devices/28-5c190087bd28/w1_slave" # Change your serial number here!!!
         self._stop_event = threading.Event()
 
     def get_settings_defaults(self):
