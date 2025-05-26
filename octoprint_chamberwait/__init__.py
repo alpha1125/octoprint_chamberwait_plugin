@@ -100,7 +100,7 @@ class ChamberWaitPlugin(
             self._chamber_thread = threading.Thread(target=self.monitor_chamber_temp, args=(self._target_temp,))
             self._chamber_thread.start()
 
-            return None  # Prevent this command from being sent to the printer
+            return None,  # Prevent this command from being sent to the printer. https://docs.octoprint.org/en/master/plugins/hooks.html#octoprint-comm-protocol-gcode-phase one tuple variant
         return cmd
 
     ##~~ Softwareupdate hook
