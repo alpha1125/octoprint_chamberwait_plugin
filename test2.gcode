@@ -1,12 +1,8 @@
-; Set bed temperature to 100°C and wait until it's reached
-M190 S50
-
-; Set tool (hotend) temperature to 260°C and wait until it's reached
-M109 S50
+M140 S50 // set bed temperature to 50°C
+M104 S50 // set hotend temperature to 50°C
 
 
-
-@CHAMBERWAIT 29  ; Custom command to wait for chamber to reach  desired temp in °C
+@CHAMBERWAIT 22  ; Custom command to wait for chamber to reach  desired temp in °C
 
 
 ; End G-code for Prusa MK3S / Marlin
