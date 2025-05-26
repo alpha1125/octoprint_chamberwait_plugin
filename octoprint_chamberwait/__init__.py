@@ -51,6 +51,12 @@ class ChamberWaitPlugin(
 
     def monitor_chamber_temp(self, target_temp):
         self._logger.info(f"Monitoring chamber temperature until it reaches {target_temp}°C.")
+        # Set job on hold instead of pausing print
+        if hasattr(self._printer, "set_job_on_hold"):
+            self._printer.set_job_on_hold(True, reason="chamberwait")
+        else:
+            self._logger.warning("Printer does not support set_job_on_hold. Falling back to pause_print.")
+            self._printer.pause_print()
         while not self._stop_event.is_set():
             current_temp = self.read_chamber_temp()
             if current_temp is not None:
@@ -60,7 +66,11 @@ class ChamberWaitPlugin(
                     self._logger.info("Target chamber temperature reached. Resuming print.")
                     self._printer.commands("M117 Starting to print...")
                     self._stop_event.set()
-                    self._printer.resume_print()
+                    # Release job hold if supported
+                    if hasattr(self._printer, "set_job_on_hold"):
+                        self._printer.set_job_on_hold(False, reason="chamberwait")
+                    else:
+                        self._printer.resume_print()
                     break
             else:
                 self._logger.error("Chamber temperature read failed. Cancelling print.")
@@ -123,5 +133,6 @@ __plugin_version__ = "0.0.1"
 __plugin_description__ = "Pauses print until chamber reaches target temperature."
 __plugin_pythoncompat__ = ">=3,<4"
 __plugin_hooks__ = {
-    "octoprint.comm.protocol.gcode.queuing": __plugin_implementation__.gcode_queuing_handler
+    "octoprint.comm.protocol.gcode.queuing": __plugin_implementation__.gcode_queuing_handler,
+    "octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information
 }
