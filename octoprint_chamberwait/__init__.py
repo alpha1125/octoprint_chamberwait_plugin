@@ -55,22 +55,22 @@ class ChamberWaitPlugin(
         if hasattr(self._printer, "set_job_on_hold"):
             self._printer.set_job_on_hold(True, reason="chamberwait")
         else:
-            self._logger.warning("Printer does not support set_job_on_hold. Falling back to pause_print.")
-            self._printer.pause_print()
+            self._logger.warning("Printer does not support set_job_on_hold. Cannot hold job as intended.")
         while not self._stop_event.is_set():
             current_temp = self.read_chamber_temp()
             if current_temp is not None:
-                self._printer.commands(f"M117 Chamber Temp {current_temp:.2f}C/{target_temp:.2f}C")
+                self._printer.commands(f"M117 Chamber Temp {current_temp:.1f}\x01C/{target_temp:.1f}\x01C")
+                self._printer.commands(f"; Chamber Temp {current_temp:.1f}°C/{target_temp:.1f}°C")
                 self._logger.info(f"M117 Chamber Temp {current_temp:.2f}C/{target_temp:.2f}C")
                 if current_temp >= target_temp:
-                    self._logger.info("Target chamber temperature reached. Resuming print.")
-                    self._printer.commands("M117 Starting to print...")
+                    self._logger.info("Target chamber temperature reached. Releasing job hold.")
+                    self._printer.commands("M117 Continuing job...")
                     self._stop_event.set()
                     # Release job hold if supported
                     if hasattr(self._printer, "set_job_on_hold"):
                         self._printer.set_job_on_hold(False, reason="chamberwait")
                     else:
-                        self._printer.resume_print()
+                        self._logger.warning("Printer does not support set_job_on_hold. Cannot release job hold as intended.")
                     break
             else:
                 self._logger.error("Chamber temperature read failed. Cancelling print.")
@@ -86,25 +86,30 @@ class ChamberWaitPlugin(
             self._stop_event.clear()
 
             self._target_temp = int(match.group(1))
-            self._logger.info(f"Detected @CHAMBERWAIT command with target temperature: {self._target_temp}°C")
-            self._logger.info("Will pause print, until chamber reaches target temperature.")
-            self._printer.pause_print()
 
-            # Ensure previous thread is stopped before starting a new one
+            # This sends to the printer, but also to the webui, terminal. Noticed the ";" prefix in the string.
+            self._printer.commands(f"; Detected @CHAMBERWAIT command with target temperature: {self._target_temp}°C")
+            self._printer.commands("; Will hold job until chamber reaches target temperature.")
+
+            # Log the command detection
+            self._logger.info(f"Detected @CHAMBERWAIT command with target temperature: {self._target_temp}°C")
+            self._logger.info("Will hold job until chamber reaches target temperature.")
+
+            # Ensure that the previous thread is stopped before starting a new one
             if self._chamber_thread and self._chamber_thread.is_alive():
                 self._logger.info("Waiting for previous chamber monitoring thread to finish.")
                 self._stop_event.set()
                 self._chamber_thread.join()
                 self._logger.info("Previous chamber monitoring thread stopped.")
             self._stop_event.clear()
+
             self._chamber_thread = threading.Thread(target=self.monitor_chamber_temp, args=(self._target_temp,))
             self._chamber_thread.start()
 
-            return None,  # Prevent this command from being sent to the printer. https://docs.octoprint.org/en/master/plugins/hooks.html#octoprint-comm-protocol-gcode-phase one tuple variant
+            return None,  # Prevent this command from being sent to the printer.
         return cmd
 
     ##~~ Softwareupdate hook
-
     def get_update_information(self):
         return {
             "chamberwait": {

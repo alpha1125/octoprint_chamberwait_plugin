@@ -1,5 +1,21 @@
-# OctoPrint-ChamberWait
+# ChamberWait Plugin for OctoPrint
+Developed for a Raspberry Pi 3B, but should work with any modern pi, running OctoPrint, this plugin integrates a DS18B20 digital temperature sensor via the 1-Wire interface. It enables conditional G-code execution based on ambient chamber temperature, allowing prints to automatically pause and wait until a specified temperature threshold is reached before continuing.
 
+## Out Of Scope
+Setting up your DS18B20 sensor and configuring your Raspberry Pi to read from it. It's assumed you've got a working 1-Wire setup.
+
+## Key Features:
+Monitors a DS18B20 sensor directly from the Pi (e.g., /sys/bus/w1/devices/.../w1_slave)
+
+Introduces a custom G-code command (@CHAMBERWAIT <temp>) to pause printing until the chamber reaches the desired temperature
+
+Implements a dedicated thread to monitor temperature independently of the print loop
+
+Handles cancellation and cleanup if the print is aborted mid-wait
+
+Logs temperature progress and plugin activity for debugging and diagnostics
+
+Ideal for enclosed 3D printing environments (e.g., ASA/ABS), where consistent chamber heat is critical for print quality.
 This plugin pauses the print when it encounters the `@CHAMBERWAIT <temp>` command in the G-code. It monitors the chamber temperature using a DS18B20 sensor and resumes the print once the target temperature is reached.
 
 ## Installation
