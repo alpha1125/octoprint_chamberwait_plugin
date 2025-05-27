@@ -119,7 +119,7 @@ class ChamberWaitPlugin(
                 "user": "alpha1125",
                 "repo": "OctoPrint-ChamberWait",
                 "current": self._plugin_version,
-                "pip": "https://github.com/alpha1125/OctoPrint-ChamberWait/archive/{target_version}.zip"
+                "pip": "https://github.com/alpha1125/octoprint_chamberwait_plugin/releases/download/{target_version}/octoprint_chamberwait-{target_version}.tar.gz"
             }
         }
 
@@ -134,7 +134,7 @@ class ChamberWaitPlugin(
 
 __plugin_implementation__ = ChamberWaitPlugin()
 __plugin_name__ = "ChamberWait Plugin"
-__plugin_version__ = "0.1.0"
+__plugin_version__ = "0.1.1"
 __plugin_description__ = "Pauses print until chamber reaches target temperature. Reading DS18B20 temperature sensor via GPIO."
 __plugin_pythoncompat__ = ">=3,<4"
 __plugin_hooks__ = {

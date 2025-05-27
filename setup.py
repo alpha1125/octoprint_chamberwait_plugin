@@ -3,7 +3,7 @@ from setuptools import setup
 plugin_identifier = "chamberwait"
 plugin_package = "octoprint_chamberwait"
 plugin_name = "OctoPrint-ChamberWait"
-plugin_version = "0.1.0"
+plugin_version = "0.1.1"
 plugin_description = "Pauses print until chamber reaches target temperature. Reading  DS18B20 temperature sensor via GPIO."
 plugin_author = "Lloyd Leung"
 plugin_author_email = "you@example.com"
